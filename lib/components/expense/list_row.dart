@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class QuickNoteListRow extends StatelessWidget {
+class ExpenseListRow extends StatelessWidget {
   final String purpose;
   final double amount;
 
-  const QuickNoteListRow({required this.purpose, required this.amount});
+  const ExpenseListRow({required this.purpose, required this.amount});
 
   @override
   Widget build(BuildContext context) {

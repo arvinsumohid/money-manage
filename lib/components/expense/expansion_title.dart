@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class QuickNoteExpansionTitle extends StatelessWidget {
+class ExpenseExpansionTitle extends StatelessWidget {
   final String date;
 
-  QuickNoteExpansionTitle({required this.date});
+  ExpenseExpansionTitle({required this.date});
 
   @override
   Widget build(BuildContext context) {

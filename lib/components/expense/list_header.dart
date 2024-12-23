@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class QuickNoteListHeader extends StatelessWidget {
-  const QuickNoteListHeader();
+class ExpenseListHeader extends StatelessWidget {
+  const ExpenseListHeader();
 
   @override
   Widget build(BuildContext context) {
