@@ -32,6 +32,10 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+.android/
+.gradle/
+/.vscode/
+/.packages
 
 # Symbolication related
 app.*.symbols
@@ -43,3 +47,20 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/keystore.jks
+
+
+/ios/Flutter/Flutter.framework/
+/ios/Flutter/Flutter.podspec
+/ios/Pods/
+/ios/Runner.xcworkspace/
+/ios/.symlinks/
+
+*.log
+*.lock
+*.swp
+.flutter-plugins
+.flutter-plugins-dependencies
+
+Thumbs.db
+keystore.jks

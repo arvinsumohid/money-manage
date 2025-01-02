@@ -8,16 +8,15 @@ class ExpenseExpansionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(
             'Date:',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 26,
+              fontSize: 18,
             ),
           ),
           Text(
@@ -25,10 +24,9 @@ class ExpenseExpansionTitle extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 26,
+              fontSize: 18,
             ),
           ),
-      ])
-    );
+        ]));
   }
 }

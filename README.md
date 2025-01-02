@@ -20,3 +20,6 @@ samples, guidance on mobile development, and a full API reference.
 - run `gradlew build` it is okay if failed
 - run `cd ./` to go back 
 - run `flutter clean`
+
+create apk
+- flutter build apk --release

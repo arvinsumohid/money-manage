@@ -6,19 +6,17 @@ class ExpenseListHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Expanded(
             child: Text(
               'Purpose',
               style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 30,
-                fontStyle: FontStyle.italic
-              ),
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                  fontStyle: FontStyle.italic),
               textAlign: TextAlign.left,
             ),
           ),
@@ -26,15 +24,13 @@ class ExpenseListHeader extends StatelessWidget {
             child: Text(
               'Amount',
               style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 30,
-                fontStyle: FontStyle.italic
-              ),
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                  fontStyle: FontStyle.italic),
               textAlign: TextAlign.right,
             ),
           ),
-      ])
-    );
+        ]));
   }
 }
