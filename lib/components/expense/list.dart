@@ -15,13 +15,11 @@ class ExpenseList extends StatefulWidget {
 }
 
 class _ExpenseListState extends State<ExpenseList> {
-  final _expenseList = Hive.box('expenseList');
-
   double calculateTotalAmount() {
-    return _expenseList.values.fold(
+    return widget.expenseList.fold(
         0.0,
         (sum, expense) =>
-            sum + (double.tryParse(expense[2].toString()) ?? 0.0));
+            sum + (double.tryParse(expense['amount'].toString()) ?? 0.0));
   }
 
   @override
