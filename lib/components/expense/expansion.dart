@@ -25,12 +25,12 @@ class _ExpenseExpansionState extends State<ExpenseExpansion> {
     return Container(
       margin: EdgeInsets.all(15),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         child: ExpansionTile(
           title: ExpenseExpansionTitle(date: widget.date),
           backgroundColor: Colors.teal[700],
           collapsedBackgroundColor: Colors.teal[700],
-          tilePadding: EdgeInsets.all(10),
+          tilePadding: EdgeInsets.fromLTRB(8, 4, 8, 4),
           initiallyExpanded: _isExpanded,
           onExpansionChanged: (bool expanded) {
             setState(() {
