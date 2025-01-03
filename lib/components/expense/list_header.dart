@@ -15,18 +15,18 @@ class ExpenseListHeader extends StatelessWidget {
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 24,
+                  fontSize: 18,
                   fontStyle: FontStyle.italic),
               textAlign: TextAlign.left,
             ),
           ),
           Expanded(
             child: Text(
-              'Amount',
+              'Amount (PHP)',
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 24,
+                  fontSize: 18,
                   fontStyle: FontStyle.italic),
               textAlign: TextAlign.right,
             ),

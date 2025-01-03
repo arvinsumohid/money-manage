@@ -13,15 +13,17 @@ class ExpenseListTotalAmount extends StatelessWidget {
           'Total Amount: ',
           style: TextStyle(
             color: Colors.black,
+            fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
             fontSize: 25,
           ),
         ),
         Spacer(),
         Text(
-          totalAmount,
+          'PHP $totalAmount',
           style: TextStyle(
             color: Colors.black,
+            fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
             fontSize: 25,
           ),

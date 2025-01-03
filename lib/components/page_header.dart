@@ -11,9 +11,9 @@ class PageHeader extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          color: Colors.white,
+          color: Colors.grey[600],
           fontWeight: FontWeight.bold,
-          fontSize: 45,
+          fontSize: 32,
         ),
       ),
     );

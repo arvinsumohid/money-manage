@@ -28,8 +28,8 @@ class StickyBtn extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
             shape: CircleBorder(),
-            padding: EdgeInsets.all(20),
-            backgroundColor: Colors.teal[700]),
+            padding: EdgeInsets.all(16),
+            backgroundColor: Colors.teal[900]),
         child: Icon(
           Icons.add,
           size: 50,

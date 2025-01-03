@@ -53,16 +53,16 @@ class ExpenseListRow extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.black,
                     fontStyle: FontStyle.italic,
-                    fontSize: 25,
+                    fontSize: 16,
                   ),
                 ),
                 Spacer(),
                 Text(
-                  amount.toString(),
+                  amount.toStringAsFixed(2),
                   style: TextStyle(
                     color: Colors.black,
                     fontStyle: FontStyle.italic,
-                    fontSize: 25,
+                    fontSize: 16,
                   ),
                 ),
               ],

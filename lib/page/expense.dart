@@ -19,18 +19,30 @@ class _ExpenseState extends State<Expense> {
     });
   }
 
+  void _handleDeleteList(List<int> list) {
+    print(_expenseList.values.toList());
+    for (var v in list.reversed.toList()) {
+      _handleDelete(v);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double paddingValue = screenWidth * 0.05;
     List<dynamic> expenseList = _expenseList.values.toList();
     Map<String, List<Map<String, dynamic>>> expenseMap = {};
+    Map<String, double> totalAmountPerDate = {};
 
     expenseList.asMap().forEach((index, expense) {
       final date = expense[0].toString();
       if (expenseMap[date] == null) {
         expenseMap[date] = [];
+        totalAmountPerDate[date] = 0.0;
       }
+
+      totalAmountPerDate[date] = totalAmountPerDate[date]! + expense[2];
+
       expenseMap[date]!.add({
         'index': index,
         'date': expense[0],
@@ -47,7 +59,7 @@ class _ExpenseState extends State<Expense> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.teal[200],
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           Padding(
@@ -55,7 +67,7 @@ class _ExpenseState extends State<Expense> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                PageHeader(text: 'Expense List'),
+                PageHeader(text: 'EXPENSE LIST'),
                 Expanded(
                   child: expenseMap.isEmpty
                       ? Center(
@@ -73,7 +85,11 @@ class _ExpenseState extends State<Expense> {
                             return ExpenseExpansion(
                               date: entry.key,
                               expenseList: entry.value,
+                              totalAmount: totalAmountPerDate[entry.key]!,
                               onDelete: _handleDelete,
+                              onDeleteList: ([list]) {
+                                _handleDeleteList(list);
+                              },
                             );
                           }).toList(),
                         ),

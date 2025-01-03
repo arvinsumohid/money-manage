@@ -8,7 +8,10 @@ class ExpenseList extends StatefulWidget {
   final List<Map<String, dynamic>> expenseList;
   final Function(int) onDelete;
 
-  ExpenseList({required this.expenseList, required this.onDelete});
+  ExpenseList({
+    required this.expenseList,
+    required this.onDelete,
+  });
 
   @override
   State<ExpenseList> createState() => _ExpenseListState();
@@ -25,7 +28,7 @@ class _ExpenseListState extends State<ExpenseList> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.lightGreen[50],
+        color: Colors.teal[50],
         child: Padding(
             padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
             child: Column(mainAxisSize: MainAxisSize.max, children: [
@@ -39,16 +42,16 @@ class _ExpenseListState extends State<ExpenseList> {
                       widget.onDelete(index);
                     },
                   )),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Divider(
-                  color: Colors.black,
-                  thickness: 1.0,
-                  height: 1.0,
-                ),
-              ),
-              ExpenseListTotalAmount(
-                  totalAmount: calculateTotalAmount().toString())
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 10.0),
+              //   child: Divider(
+              //     color: Colors.black,
+              //     thickness: 1.0,
+              //     height: 1.0,
+              //   ),
+              // ),
+              // ExpenseListTotalAmount(
+              //     totalAmount: calculateTotalAmount().toStringAsFixed(2))
             ])));
   }
 }
