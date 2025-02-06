@@ -4,6 +4,7 @@ import 'package:money_manage/components/expense/expense_popup_form.dart';
 
 class ExpenseListRow extends StatelessWidget {
   final _expenseList = Hive.box('expenseList');
+  final String type;
   final int index;
   final String date;
   final String purpose;
@@ -11,6 +12,7 @@ class ExpenseListRow extends StatelessWidget {
   final Function(int) onDelete;
 
   ExpenseListRow({
+    required this.type,
     required this.index,
     required this.date,
     required this.purpose,
@@ -47,25 +49,55 @@ class ExpenseListRow extends StatelessWidget {
                   )
                 },
             child: Row(
-              children: [
-                Text(
-                  purpose,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontStyle: FontStyle.italic,
-                    fontSize: 25,
-                  ),
-                ),
-                Spacer(),
-                Text(
-                  amount.toString(),
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontStyle: FontStyle.italic,
-                    fontSize: 25,
-                  ),
-                ),
-              ],
+              children: type == 'daily'
+                  ? [
+                      Text(
+                        purpose,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Spacer(),
+                      Text(
+                        amount.toStringAsFixed(2),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ]
+                  : [
+                      Text(
+                        date,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Spacer(),
+                      Text(
+                        purpose,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 16,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      Spacer(),
+                      Text(
+                        amount.toStringAsFixed(2),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
             )));
   }
 

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class ExpenseExpansionTitle extends StatelessWidget {
   final String date;
+  final double totalAmount;
 
-  ExpenseExpansionTitle({required this.date});
+  ExpenseExpansionTitle({required this.date, required this.totalAmount});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,7 @@ class ExpenseExpansionTitle extends StatelessWidget {
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(
-            'Date:',
+            date,
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -20,7 +21,7 @@ class ExpenseExpansionTitle extends StatelessWidget {
             ),
           ),
           Text(
-            date,
+            "PHP ${totalAmount.toStringAsFixed(2)}",
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
