@@ -49,27 +49,6 @@ class ExpenseListRow extends StatelessWidget {
                   )
                 },
             child: Row(
-<<<<<<< Updated upstream
-              children: [
-                Text(
-                  purpose,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontStyle: FontStyle.italic,
-                    fontSize: 25,
-                  ),
-                ),
-                Spacer(),
-                Text(
-                  amount.toString(),
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontStyle: FontStyle.italic,
-                    fontSize: 25,
-                  ),
-                ),
-              ],
-=======
               children: type == 'daily'
                   ? [
                       Text(
@@ -119,7 +98,6 @@ class ExpenseListRow extends StatelessWidget {
                         ),
                       ),
                     ],
->>>>>>> Stashed changes
             )));
   }
 

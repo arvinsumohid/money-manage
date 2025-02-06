@@ -18,68 +18,6 @@ class _ExpenseState extends State<Expense> {
         .deleteAt(index); // No need for setState(), Hive updates automatically
   }
 
-<<<<<<< Updated upstream
-  @override
-  Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double paddingValue = screenWidth * 0.05;
-    List<dynamic> expenseList = _expenseList.values.toList();
-    Map<String, List<Map<String, dynamic>>> expenseMap = {};
-
-    expenseList.asMap().forEach((index, expense) {
-      final date = expense[0].toString();
-      if (expenseMap[date] == null) {
-        expenseMap[date] = [];
-      }
-      expenseMap[date]!.add({
-        'index': index,
-        'date': expense[0],
-        'purpose': expense[1],
-        'amount': expense[2],
-      });
-    });
-
-    var sortedKeys = expenseMap.keys.toList()..sort((a, b) => a.compareTo(b));
-
-    Map<String, List<Map<String, dynamic>>> sortedExpenseMap = {};
-    for (var key in sortedKeys) {
-      sortedExpenseMap[key] = expenseMap[key]!;
-    }
-
-    return Scaffold(
-      backgroundColor: Colors.teal[200],
-      body: Stack(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(paddingValue),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                PageHeader(text: 'Expense List'),
-                Expanded(
-                  child: expenseMap.isEmpty
-                      ? Center(
-                          child: Text(
-                            'No Data Found',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        )
-                      : ListView(
-                          children: sortedExpenseMap.entries.map((entry) {
-                            return ExpenseExpansion(
-                              date: entry.key,
-                              expenseList: entry.value,
-                              onDelete: _handleDelete,
-                            );
-                          }).toList(),
-                        ),
-                ),
-              ],
-=======
   void _handleDeleteList(List<int> list) {
     for (var v in list.reversed.toList()) {
       _handleDelete(v);
@@ -107,7 +45,6 @@ class _ExpenseState extends State<Expense> {
                   ),
                 ],
               ),
->>>>>>> Stashed changes
             ),
             StickyBtn(),
           ],
