@@ -4,10 +4,12 @@ import 'package:money_manage/components/expense/list.dart';
 
 class ExpenseExpansion extends StatefulWidget {
   final String date;
+  final String type;
   final List<Map<String, dynamic>> expenseList;
   final Function(int) onDelete;
 
   ExpenseExpansion({
+    required this.type,
     required this.date,
     required this.expenseList,
     required this.onDelete,
@@ -39,6 +41,7 @@ class _ExpenseExpansionState extends State<ExpenseExpansion> {
           },
           children: [
             ExpenseList(
+              type: widget.type,
               expenseList: widget.expenseList,
               onDelete: widget.onDelete,
             ),
