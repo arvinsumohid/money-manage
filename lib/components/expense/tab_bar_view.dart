@@ -95,7 +95,8 @@ class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
         'Bills': 0.0,
         'Wants': 0.0,
         'Investments': 0.0,
-        'Tithe': 0.0
+        'Tithe': 0.0,
+        'Allowance': 0.0,
       };
     }
 

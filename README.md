@@ -26,3 +26,4 @@ run flutter
 
 create apk
 - flutter build apk --release
+- cd build/app/outputs/apk/release
