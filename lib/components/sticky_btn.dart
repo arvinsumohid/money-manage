@@ -5,8 +5,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 class StickyBtn extends StatelessWidget {
   final _expenseList = Hive.box('expenseList');
 
-  void writeData(String date, String purpose, double amount, [int? index]) {
-    _expenseList.add([date, purpose, amount]);
+  void writeData(String date, String purpose, double amount, String category,
+      [int? index]) {
+    _expenseList.add([date, purpose, amount, category]);
   }
 
   @override

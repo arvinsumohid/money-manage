@@ -9,6 +9,7 @@ class ExpenseExpansion extends StatefulWidget {
   final Function(int) onDelete;
   final double totalAmount;
   final Function onDeleteList;
+  final Map<String, dynamic> categoryExpenses;
 
   ExpenseExpansion({
     required this.type,
@@ -17,6 +18,7 @@ class ExpenseExpansion extends StatefulWidget {
     required this.onDelete,
     required this.totalAmount,
     required this.onDeleteList,
+    required this.categoryExpenses,
   });
 
   @override
@@ -53,6 +55,43 @@ class _ExpenseExpansionState extends State<ExpenseExpansion> {
             });
           },
           children: [
+            if (widget.type == 'monthly')
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                  color: Colors.lightGreen[50],
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Category Expenses',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                    SizedBox(height: 5),
+                    // loop the categoryExpenses map and build each category item
+                    ...widget.categoryExpenses.entries.map((entry) {
+                      String category = entry.key;
+                      double amount = entry.value;
+                      return _buildCategoryItem(category, amount);
+                    }),
+                  ],
+                ),
+              ),
             ExpenseList(
               type: widget.type,
               expenseList: widget.expenseList,
@@ -60,6 +99,26 @@ class _ExpenseExpansionState extends State<ExpenseExpansion> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryItem(String category, double amount) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      child: Row(
+        mainAxisAlignment:
+            MainAxisAlignment.spaceBetween, // 👈 Ensures spacing between text
+        children: [
+          Text(
+            category, // Category Name
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          Text(
+            '${amount.toStringAsFixed(0)} PHP', // Amount
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }

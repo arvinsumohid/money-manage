@@ -9,6 +9,7 @@ class ExpenseListRow extends StatelessWidget {
   final String date;
   final String purpose;
   final double amount;
+  final String category;
   final Function(int) onDelete;
 
   ExpenseListRow({
@@ -17,11 +18,13 @@ class ExpenseListRow extends StatelessWidget {
     required this.date,
     required this.purpose,
     required this.amount,
+    required this.category,
     required this.onDelete,
   });
 
-  void updateData(String date, String purpose, double amount, [int? index]) {
-    _expenseList.putAt(index!, [date, purpose, amount]);
+  void updateData(String date, String purpose, double amount, String category,
+      [int? index]) {
+    _expenseList.putAt(index!, [date, purpose, amount, category]);
   }
 
   @override
@@ -41,6 +44,7 @@ class ExpenseListRow extends StatelessWidget {
                         updateData: {
                           'date': date,
                           'purpose': purpose,
+                          'category': category,
                           'amount': amount.toString(),
                           'index': index.toString()
                         },

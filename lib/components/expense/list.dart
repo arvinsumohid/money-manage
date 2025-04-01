@@ -39,6 +39,9 @@ class _ExpenseListState extends State<ExpenseList> {
                     date: expense['date'],
                     purpose: expense['purpose'],
                     amount: expense['amount'],
+                    category: (expense.length > 3)
+                        ? expense['category']
+                        : 'Uncategorized',
                     onDelete: (index) {
                       widget.onDelete(index);
                     },

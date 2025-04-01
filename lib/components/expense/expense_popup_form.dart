@@ -1,8 +1,10 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ExpensePopupForm extends StatefulWidget {
-  final void Function(String, String, double, [int?]) submitFunc;
+  final void Function(String, String, double, String, [int?]) submitFunc;
   final Map<String, dynamic> updateData;
 
   ExpensePopupForm({required this.submitFunc, this.updateData = const {}});
@@ -14,9 +16,26 @@ class ExpensePopupForm extends StatefulWidget {
 class ExpensePopupFormState extends State<ExpensePopupForm> {
   final purposeController = TextEditingController();
   final amountController = TextEditingController();
+  final categoryController = TextEditingController();
   int hiveIndex = 0;
   bool isUpdate = false;
   DateTime selectedDate = DateTime.now();
+  static List<String> category = [
+    'Uncategorized',
+    'Bills',
+    'Wants',
+    'Investments',
+    'Tithe'
+  ];
+  String dropdownValue = category.first;
+
+  final List<DropdownMenuEntry<String>> dropdownMenuEntries;
+
+  ExpensePopupFormState()
+      : dropdownMenuEntries = category
+            .map<DropdownMenuEntry<String>>(
+                (String name) => DropdownMenuEntry(value: name, label: name))
+            .toList();
 
   @override
   void initState() {
@@ -27,6 +46,7 @@ class ExpensePopupFormState extends State<ExpensePopupForm> {
           DateFormat('MMM d, yyyy').parse(widget.updateData['date'] ?? '');
       purposeController.text = widget.updateData['purpose'] ?? '';
       amountController.text = widget.updateData['amount'] ?? '';
+      categoryController.text = widget.updateData['category'] ?? '';
       isUpdate = true;
       hiveIndex = int.parse(widget.updateData['index']) ?? 0;
     }
@@ -57,6 +77,24 @@ class ExpensePopupFormState extends State<ExpensePopupForm> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Container(
+            width: double.infinity,
+            constraints:
+                BoxConstraints(minWidth: double.infinity), // Force full width
+            child: DropdownMenu<String>(
+              controller: categoryController,
+              initialSelection: categoryController.text != ''
+                  ? categoryController.text
+                  : category.first,
+              onSelected: (String? value) {
+                setState(() {
+                  dropdownValue = value!;
+                });
+              },
+              dropdownMenuEntries: dropdownMenuEntries,
+            ),
+          ),
+          SizedBox(height: 16),
           TextField(
             readOnly: true,
             controller: TextEditingController(
@@ -107,6 +145,7 @@ class ExpensePopupFormState extends State<ExpensePopupForm> {
           onPressed: () {
             final String purpose = purposeController.text;
             final String amountText = amountController.text;
+            final String selectedCategory = categoryController.text;
 
             if (purpose.isEmpty || amountText.isEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -124,7 +163,7 @@ class ExpensePopupFormState extends State<ExpensePopupForm> {
               return;
             }
             widget.submitFunc(DateFormat('MMM d, yyyy').format(selectedDate),
-                purpose, amount, hiveIndex);
+                purpose, amount, selectedCategory, hiveIndex);
 
             Navigator.of(context).pop();
           },
