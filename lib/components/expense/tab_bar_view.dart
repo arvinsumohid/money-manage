@@ -191,8 +191,6 @@ class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
   Widget _buildMonthlyExpenseList(
       Map<String, List<Map<String, dynamic>>> sortedExpenseMapMonthly,
       Map<String, double> totalAmountPerMonth) {
-    print('TAB BAR VIEW');
-
     return sortedExpenseMapMonthly.isEmpty
         ? Center(
             child: Text(
