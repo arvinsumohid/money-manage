@@ -20,6 +20,14 @@ class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
   late Map<String, List<Map<String, dynamic>>> expenseMapMonthly;
   late Map<String, double> totalAmountPerDate;
   late Map<String, double> totalAmountPerMonth;
+  late Map<String, Map<String, double>> categoryExpenses;
+  static List<String> defaultCategory = [
+    'Uncategorized',
+    'Bills',
+    'Wants',
+    'Investments',
+    'Tithe'
+  ];
 
   @override
   void initState() {
@@ -34,6 +42,7 @@ class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
     expenseMapMonthly = {};
     totalAmountPerDate = {};
     totalAmountPerMonth = {};
+    categoryExpenses = {};
 
     _processExpenseData();
   }
@@ -52,6 +61,7 @@ class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
       'date': expense[0],
       'purpose': expense[1],
       'amount': expense[2],
+      'category': (expense.length > 3) ? expense[3] : 'Uncategorized',
     });
   }
 
@@ -64,7 +74,6 @@ class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
     }
 
     totalAmountPerMonth[month] = totalAmountPerMonth[month]! + expense[2];
-
     expenseMapMonthly[month]!.add({
       'index': index,
       'month': DateFormat('MMMM')
@@ -72,7 +81,26 @@ class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
       'date': expense[0],
       'purpose': expense[1],
       'amount': expense[2],
+      'category': (expense.length > 3) ? expense[3] : 'Uncategorized',
     });
+  }
+
+  void calculateCategoryExpenses(List expense) {
+    final month = expense[0].split(' ')[0]; // Get only the month (e.g., 'Feb')
+    final category = (expense.length > 3) ? expense[3] : 'Uncategorized';
+
+    if (categoryExpenses[month] == null) {
+      categoryExpenses[month] = {
+        'Uncategorized': 0.0,
+        'Bills': 0.0,
+        'Wants': 0.0,
+        'Investments': 0.0,
+        'Tithe': 0.0
+      };
+    }
+
+    categoryExpenses[month]![category] =
+        categoryExpenses[month]![category]! + expense[2];
   }
 
   // Function to process the expense data
@@ -88,6 +116,9 @@ class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
 
       // Add expense to monthly map
       monthlyExpenseList(index, expense, date);
+
+      // Calculate category expenses
+      calculateCategoryExpenses(expense);
     });
   }
 
@@ -146,6 +177,7 @@ class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
                 date: entry.value[0]['date'],
                 expenseList: entry.value,
                 totalAmount: totalAmountPerDate[entry.key]!,
+                categoryExpenses: categoryExpenses[entry.key] ?? {},
                 onDelete: widget.onDelete,
                 onDeleteList: ([list]) {
                   widget.onDeleteList(list);
@@ -170,12 +202,13 @@ class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
             ),
           )
         : ListView(
-            children: sortedExpenseMapMonthly.entries.map((entry) {
+            children: sortedExpenseMapMonthly.entries.toList().map((entry) {
               return ExpenseExpansion(
                 type: 'monthly',
                 date: entry.value[0]['month'],
                 expenseList: entry.value,
                 totalAmount: totalAmountPerMonth[entry.key]!,
+                categoryExpenses: categoryExpenses[entry.key] ?? {},
                 onDelete: widget.onDelete,
                 onDeleteList: ([list]) {
                   widget.onDeleteList(list);
