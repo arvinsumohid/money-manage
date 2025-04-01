@@ -25,7 +25,8 @@ class ExpensePopupFormState extends State<ExpensePopupForm> {
     'Bills',
     'Wants',
     'Investments',
-    'Tithe'
+    'Tithe',
+    'Allowance',
   ];
   String dropdownValue = category.first;
 
