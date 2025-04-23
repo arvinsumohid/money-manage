@@ -3,11 +3,12 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../expenseList/expense.list.service.dart';
+
 class ExpensePopupForm extends StatefulWidget {
-  final void Function(String, String, double, String, [int?]) submitFunc;
   final Map<String, dynamic> updateData;
 
-  ExpensePopupForm({required this.submitFunc, this.updateData = const {}});
+  ExpensePopupForm({this.updateData = const {}});
 
   @override
   ExpensePopupFormState createState() => ExpensePopupFormState();
@@ -143,7 +144,7 @@ class ExpensePopupFormState extends State<ExpensePopupForm> {
         ),
         FilledButton(
           child: Text('Save'),
-          onPressed: () {
+          onPressed: () async {
             final String purpose = purposeController.text;
             final String amountText = amountController.text;
             final String selectedCategory = categoryController.text;
@@ -163,8 +164,14 @@ class ExpensePopupFormState extends State<ExpensePopupForm> {
               );
               return;
             }
-            widget.submitFunc(DateFormat('MMM d, yyyy').format(selectedDate),
-                purpose, amount, selectedCategory, hiveIndex);
+
+            await ExpenseListService.addExpense({
+              'date': DateFormat('MMM d, yyyy').format(selectedDate),
+              'purpose': purpose,
+              'amount': amount,
+              'category': selectedCategory,
+              'index': hiveIndex
+            });
 
             Navigator.of(context).pop();
           },

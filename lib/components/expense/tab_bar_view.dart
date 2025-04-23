@@ -2,25 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:money_manage/components/expense/expansion.dart';
+import 'package:money_manage/expenseList/expense.list.service.dart';
 
 class ExpenseTabBarView extends StatefulWidget {
-  final Box _expenseList;
-  final Function(int) onDelete;
-  final Function(List<int>) onDeleteList;
 
-  ExpenseTabBarView(this._expenseList, this.onDelete, this.onDeleteList);
+  ExpenseTabBarView();
 
   @override
-  _ExpenseTabBarViewState createState() => _ExpenseTabBarViewState();
+  ExpenseTabBarViewState createState() => ExpenseTabBarViewState();
 }
 
-class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
-  late List<dynamic> expenseList;
-  late Map<String, List<Map<String, dynamic>>> expenseMap;
-  late Map<String, List<Map<String, dynamic>>> expenseMapMonthly;
-  late Map<String, double> totalAmountPerDate;
-  late Map<String, double> totalAmountPerMonth;
-  late Map<String, Map<String, double>> categoryExpenses;
+class ExpenseTabBarViewState extends State<ExpenseTabBarView> {
   static List<String> defaultCategory = [
     'Uncategorized',
     'Bills',
@@ -30,137 +22,109 @@ class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-    _initializeData();
-  }
-
-  // Initialize the expense data
-  void _initializeData() {
-    expenseList = widget._expenseList.values.toList();
-    expenseMap = {};
-    expenseMapMonthly = {};
-    totalAmountPerDate = {};
-    totalAmountPerMonth = {};
-    categoryExpenses = {};
-
-    _processExpenseData();
-  }
-
-  // Function to process daily expenses
-  void dailyExpenseList(int index, List expense, String date) {
-    if (expenseMap[date] == null) {
-      expenseMap[date] = [];
-      totalAmountPerDate[date] = 0.0;
-    }
-
-    totalAmountPerDate[date] = totalAmountPerDate[date]! + expense[2];
-
-    expenseMap[date]!.add({
-      'index': index,
-      'date': expense[0],
-      'purpose': expense[1],
-      'amount': expense[2],
-      'category': (expense.length > 3) ? expense[3] : 'Uncategorized',
-    });
-  }
-
-  // Function to process monthly expenses
-  void monthlyExpenseList(int index, List expense, String date) {
-    final month = expense[0].split(' ')[0]; // Get only the month (e.g., 'Feb')
-    if (expenseMapMonthly[month] == null) {
-      expenseMapMonthly[month] = [];
-      totalAmountPerMonth[month] = 0.0;
-    }
-
-    totalAmountPerMonth[month] = totalAmountPerMonth[month]! + expense[2];
-    expenseMapMonthly[month]!.add({
-      'index': index,
-      'month': DateFormat('MMMM')
-          .format(DateFormat("MMM d, yyyy").parse(expense[0])),
-      'date': expense[0],
-      'purpose': expense[1],
-      'amount': expense[2],
-      'category': (expense.length > 3) ? expense[3] : 'Uncategorized',
-    });
-  }
-
-  void calculateCategoryExpenses(List expense) {
-    final month = expense[0].split(' ')[0]; // Get only the month (e.g., 'Feb')
-    final category = (expense.length > 3) ? expense[3] : 'Uncategorized';
-
-    if (categoryExpenses[month] == null) {
-      categoryExpenses[month] = {
-        'Uncategorized': 0.0,
-        'Bills': 0.0,
-        'Wants': 0.0,
-        'Investments': 0.0,
-        'Tithe': 0.0,
-        'Allowance': 0.0,
-      };
-    }
-
-    categoryExpenses[month]![category] =
-        categoryExpenses[month]![category]! + expense[2];
-  }
-
-  // Function to process the expense data
-  void _processExpenseData() {
-    expenseList.asMap().forEach((index, expense) {
-      final date = DateFormat("MMM d, yyyy")
-          .parse(expense[0].toString())
-          .millisecondsSinceEpoch
-          .toString();
-
-      // Add expense to daily map
-      dailyExpenseList(index, expense, date);
-
-      // Add expense to monthly map
-      monthlyExpenseList(index, expense, date);
-
-      // Calculate category expenses
-      calculateCategoryExpenses(expense);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: widget._expenseList.listenable(),
+      valueListenable: ExpenseListService.listenable(),
       builder: (context, Box expenseBox, _) {
-        // Update expenseList whenever Hive data changes
-        expenseList = expenseBox.values.toList();
-        _initializeData(); // Reprocess the data whenever it changes
+        final expenseList = expenseBox.values.toList();
+        // Process all maps locally
+        final Map<String, List<Map<String, dynamic>>> expenseMap = {};
+        final Map<String, List<Map<String, dynamic>>> expenseMapMonthly = {};
+        final Map<String, double> totalAmountPerDate = {};
+        final Map<String, double> totalAmountPerMonth = {};
+        final Map<String, Map<String, double>> categoryExpenses = {};
+
+        for (var i = 0; i < expenseList.length; i++) {
+          final expense = expenseList[i];
+          if (expense == null || expense is! Map || expense['date'] == null || expense['date'].toString().trim().isEmpty) {
+            continue;
+          }
+          final dateStr = expense['date'].toString();
+          DateTime? parsedDate;
+          try {
+            parsedDate = DateFormat("MMM d, yyyy").parse(dateStr);
+          } catch (e) {
+            continue;
+          }
+          final dateKey = parsedDate.millisecondsSinceEpoch.toString();
+          // Daily
+          if (expenseMap[dateKey] == null) {
+            expenseMap[dateKey] = [];
+            totalAmountPerDate[dateKey] = 0.0;
+          }
+          totalAmountPerDate[dateKey] = totalAmountPerDate[dateKey]! + (expense['amount'] ?? 0.0);
+          expenseMap[dateKey]!.add({
+            'index': i,
+            'date': expense['date'],
+            'purpose': expense['purpose'],
+            'amount': expense['amount'],
+            'category': expense['category'] ?? 'Uncategorized',
+          });
+          // Monthly
+          String monthKey = 'Unknown';
+          String monthFull = 'Unknown';
+          try {
+            monthKey = DateFormat('MMM d, yyyy').parse(dateStr).month.toString();
+            monthKey = dateStr.split(' ')[0];
+            monthFull = DateFormat('MMMM').format(DateFormat("MMM d, yyyy").parse(dateStr));
+          } catch (e) {
+            // fallback
+          }
+          if (expenseMapMonthly[monthKey] == null) {
+            expenseMapMonthly[monthKey] = [];
+            totalAmountPerMonth[monthKey] = 0.0;
+          }
+          totalAmountPerMonth[monthKey] = totalAmountPerMonth[monthKey]! + (expense['amount'] ?? 0.0);
+          expenseMapMonthly[monthKey]!.add({
+            'index': i,
+            'month': monthFull,
+            'date': expense['date'],
+            'purpose': expense['purpose'],
+            'amount': expense['amount'],
+            'category': expense['category'] ?? 'Uncategorized',
+          });
+          // Category
+          final category = expense['category'] ?? 'Uncategorized';
+          if (categoryExpenses[monthKey] == null) {
+            categoryExpenses[monthKey] = {
+              'Uncategorized': 0.0,
+              'Bills': 0.0,
+              'Wants': 0.0,
+              'Investments': 0.0,
+              'Tithe': 0.0,
+              'Allowance': 0.0,
+            };
+          }
+          categoryExpenses[monthKey]![category] =
+              (categoryExpenses[monthKey]![category] ?? 0.0) + (expense['amount'] ?? 0.0);
+        }
 
         // Sort the daily expense map by date
-        var sortedKeys = expenseMap.keys.toList()
-          ..sort((a, b) => a.compareTo(b));
+        var sortedKeys = expenseMap.keys.toList()..sort((a, b) => a.compareTo(b));
         Map<String, List<Map<String, dynamic>>> sortedExpenseMap = {
           for (var key in sortedKeys) key: expenseMap[key]!
         };
-
         // Sort the monthly expense map by month
-        var sortedMonthKeys = expenseMapMonthly.keys.toList()
-          ..sort((a, b) => a.compareTo(b));
+        var sortedMonthKeys = expenseMapMonthly.keys.toList()..sort((a, b) => a.compareTo(b));
         Map<String, List<Map<String, dynamic>>> sortedExpenseMapMonthly = {
           for (var key in sortedMonthKeys) key: expenseMapMonthly[key]!
         };
 
         return TabBarView(
           children: [
-            _buildDailyExpenseList(sortedExpenseMap, totalAmountPerDate),
-            _buildMonthlyExpenseList(
-                sortedExpenseMapMonthly, totalAmountPerMonth),
+            _buildDailyExpenseList(sortedExpenseMap, totalAmountPerDate, categoryExpenses),
+            _buildMonthlyExpenseList(sortedExpenseMapMonthly, totalAmountPerMonth, categoryExpenses),
           ],
         );
       },
     );
   }
 
-  /// Daily Expense List View
   Widget _buildDailyExpenseList(
-      Map<String, List<Map<String, dynamic>>> sortedExpenseMap,
-      Map<String, double> totalAmountPerDate) {
+    Map<String, List<Map<String, dynamic>>> sortedExpenseMap,
+    Map<String, double> totalAmountPerDate,
+    Map<String, Map<String, double>> categoryExpenses,
+  ) {
     return sortedExpenseMap.isEmpty
         ? Center(
             child: Text(
@@ -179,19 +143,16 @@ class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
                 expenseList: entry.value,
                 totalAmount: totalAmountPerDate[entry.key]!,
                 categoryExpenses: categoryExpenses[entry.key] ?? {},
-                onDelete: widget.onDelete,
-                onDeleteList: ([list]) {
-                  widget.onDeleteList(list);
-                },
               );
             }).toList(),
           );
   }
 
-  /// Monthly Expense List View
   Widget _buildMonthlyExpenseList(
-      Map<String, List<Map<String, dynamic>>> sortedExpenseMapMonthly,
-      Map<String, double> totalAmountPerMonth) {
+    Map<String, List<Map<String, dynamic>>> sortedExpenseMapMonthly,
+    Map<String, double> totalAmountPerMonth,
+    Map<String, Map<String, double>> categoryExpenses,
+  ) {
     return sortedExpenseMapMonthly.isEmpty
         ? Center(
             child: Text(
@@ -210,10 +171,6 @@ class _ExpenseTabBarViewState extends State<ExpenseTabBarView> {
                 expenseList: entry.value,
                 totalAmount: totalAmountPerMonth[entry.key]!,
                 categoryExpenses: categoryExpenses[entry.key] ?? {},
-                onDelete: widget.onDelete,
-                onDeleteList: ([list]) {
-                  widget.onDeleteList(list);
-                },
               );
             }).toList(),
           );

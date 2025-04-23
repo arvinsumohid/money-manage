@@ -4,8 +4,7 @@ import 'package:money_manage/page/expense.dart';
 
 void main() async {
   await Hive.initFlutter();
-
-  var box = await Hive.openBox('expenseList');
+  await Hive.openBox('expenseList');
 
   runApp(MyApp());
 }

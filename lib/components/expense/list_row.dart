@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_manage/components/expense/expense_popup_form.dart';
 
 class ExpenseListRow extends StatelessWidget {
-  final _expenseList = Hive.box('expenseList');
   final String type;
   final int index;
   final String date;
@@ -22,11 +20,6 @@ class ExpenseListRow extends StatelessWidget {
     required this.onDelete,
   });
 
-  void updateData(String date, String purpose, double amount, String category,
-      [int? index]) {
-    _expenseList.putAt(index!, [date, purpose, amount, category]);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,7 +33,6 @@ class ExpenseListRow extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return ExpensePopupForm(
-                        submitFunc: updateData,
                         updateData: {
                           'date': date,
                           'purpose': purpose,

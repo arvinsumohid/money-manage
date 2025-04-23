@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:money_manage/components/expense/list_header.dart';
 import 'package:money_manage/components/expense/list_row.dart';
+import 'package:money_manage/expenseList/expense.list.service.dart';
 
 class ExpenseList extends StatefulWidget {
   final String type;
   final List<Map<String, dynamic>> expenseList;
-  final Function(int) onDelete;
 
   ExpenseList({
     required this.type,
     required this.expenseList,
-    required this.onDelete,
   });
 
   @override
@@ -43,7 +42,7 @@ class _ExpenseListState extends State<ExpenseList> {
                         ? expense['category']
                         : 'Uncategorized',
                     onDelete: (index) {
-                      widget.onDelete(index);
+                      ExpenseListService.deleteExpense(index);
                     },
                   )),
             ])));

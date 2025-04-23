@@ -1,31 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:money_manage/components/expense/expansion_title.dart';
 import 'package:money_manage/components/expense/list.dart';
+import 'package:money_manage/expenseList/expense.list.service.dart';
 
 class ExpenseExpansion extends StatefulWidget {
   final String date;
   final String type;
   final List<Map<String, dynamic>> expenseList;
-  final Function(int) onDelete;
   final double totalAmount;
-  final Function onDeleteList;
   final Map<String, dynamic> categoryExpenses;
 
   ExpenseExpansion({
     required this.type,
     required this.date,
     required this.expenseList,
-    required this.onDelete,
     required this.totalAmount,
-    required this.onDeleteList,
     required this.categoryExpenses,
   });
 
   @override
-  _ExpenseExpansionState createState() => _ExpenseExpansionState();
+  ExpenseExpansionState createState() => ExpenseExpansionState();
 }
 
-class _ExpenseExpansionState extends State<ExpenseExpansion> {
+class ExpenseExpansionState extends State<ExpenseExpansion> {
   bool _isExpanded = false;
 
   @override
@@ -95,7 +92,6 @@ class _ExpenseExpansionState extends State<ExpenseExpansion> {
             ExpenseList(
               type: widget.type,
               expenseList: widget.expenseList,
-              onDelete: widget.onDelete,
             ),
           ],
         ),
@@ -173,7 +169,7 @@ class _ExpenseExpansionState extends State<ExpenseExpansion> {
                   expenseListIndex.add(widget.expenseList[i]['index']);
                 }
 
-                widget.onDeleteList(expenseListIndex);
+                ExpenseListService.deleteExpenses(expenseListIndex);
               },
               child: Text('Delete'),
             ),
