@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_manage/components/expense/expense_popup_form.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class StickyBtn extends StatelessWidget {
-  final _expenseList = Hive.box('expenseList');
-
-  void writeData(String date, String purpose, double amount, String category,
-      [int? index]) {
-    _expenseList.add([date, purpose, amount, category]);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +16,7 @@ class StickyBtn extends StatelessWidget {
           showDialog<void>(
             context: context,
             builder: (BuildContext context) {
-              return ExpensePopupForm(submitFunc: writeData);
+              return ExpensePopupForm();
             },
           )
         },
